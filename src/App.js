@@ -1,23 +1,43 @@
-import logo from './logo.svg';
 import './App.css';
+import Column from "./components/Column";
+import { useEffect } from "react";
+import { useColors } from "./hooks/colors";
 
 function App() {
+  const {
+    colors,
+    firstRender,
+    generateColor,
+    lockColor,
+    copyToClipboard,
+  } = useColors();
+
+  useEffect(() => {
+    // на нажатие клавиши Space происходит генерация новых цветов
+    document.addEventListener("keydown", (e) => {
+      e.preventDefault()
+      if (e.code.toLowerCase() === "space") {
+        generateColor();
+      }
+    });
+    // функция firstRender вызывается при первом рендере
+    firstRender();
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {
+        colors.map(( color, index ) => {
+          return <Column
+            color={ color.color }
+            lock={ color.lock }
+            lockColor={ lockColor }
+            id={ index }
+            key={ index }
+            copyToClipboard={ copyToClipboard }
+          />
+        })
+      }
     </div>
   );
 }
